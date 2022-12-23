@@ -3,6 +3,7 @@ const express = require("express");
 // We use it to define our routes.
 // The router will be added as a middleware and will take control of requests starting with path /record.
 const recordRoutes = express.Router();
+var crypto = require('crypto'); 
 
 // This will help us connect to the database
 const dbo = require("./database");
@@ -10,10 +11,44 @@ const dbo = require("./database");
 // This help convert the id from string to ObjectId for the _id.
 const ObjectId = require("mongodb").ObjectId;
 
-// This section will help you get a list of all the records.
+// This section will help you cryptoget a list of all the records.
 recordRoutes.get("/", (req, res) => {
   res.send("Hello");
 });
+function validPassword(pss, salt, hash){
+  var hashed = crypto.pbkdf2Sync(pss,  
+    salt, 1000, 64, `sha512`).toString(`hex`); 
+    return hash === hashed; 
+}
+recordRoutes.post("/validUser", (req, res) => {
+  console.log(req.body)
+  dbo.connection
+  .useDb("KFashionDB")
+  .collection("Users").find({ correo : req.body.email }).toArray(function(err, user1) { 
+    let user = user1[0]
+    console.log(user)
+    if (user === null) { 
+        return res.status(400).send({ 
+            message : "User no encontrado.", user: ""
+        }); 
+    } 
+    else { 
+        if (validPassword(req.body.password,user.salt,user.hash)) { 
+            return res.status(201).send({ 
+                message : "Usuario ha iniciado sesión",user:user
+            }) 
+        } 
+        else { 
+            return res.status(400).send({ 
+                message : "Contraseña incorrecta", user:""
+            }); 
+        } 
+    } 
+}); 
+    
+  
+});
+
 recordRoutes.get("/get/users", (req, res) => {
   dbo.connection
     .useDb("KFashionDB")
@@ -387,14 +422,22 @@ recordRoutes.post("/update/order", (req, res) => {
 });
 
 recordRoutes.post("/add/user", (req, res) => {
+  let salt = crypto.randomBytes(16).toString('hex'); 
+  
+    // Hashing user's salt and password with 1000 iterations, 
+     
+    let hash = crypto.pbkdf2Sync(req.body.contrasenha, salt,  
+    1000, 64, `sha512`).toString(`hex`); 
+    console.log(hash)
   let myobj = {
     nombre: req.body.nombre,
     apellido: req.body.apellido,
     fecha_nacimiento: req.body.fecha_nacimiento,
-    correo: req.body.correo,
-    contrasenha: req.body.contrasenha,
+    correo: req.body.correo,      
     cedula: req.body.cedula,
     sexo: req.body.sexo,
+    hash : hash,
+    salt: salt,
     rol: req.body.rol,
   };
 
