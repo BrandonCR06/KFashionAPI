@@ -479,4 +479,15 @@ recordRoutes.post("/updatePromo", (req, res) => {
     );
 });
 
+recordRoutes.get("/get/categorias", (req, res) => {
+  dbo.connection
+    .useDb("KFashionDB")
+    .collection("Categorias")
+    .find({})
+    .toArray(function (err, result) {
+      if (err) throw err;
+      res.json(result);
+    });
+});
+
 module.exports = recordRoutes;
