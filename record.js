@@ -29,12 +29,12 @@ recordRoutes.post("/validUser", (req, res) => {
     console.log(user)
     if (user === null) { 
         return res.status(400).send({ 
-            message : "User no encontrado.", user: ""
+            message : "Usuario no encontrado.", user: ""
         }); 
     } 
     else { 
         if (validPassword(req.body.password,user.salt,user.hash)) { 
-            return res.status(201).send({ 
+            return res.status(200).send({ 
                 message : "Usuario ha iniciado sesión",user:user
             }) 
         } 
@@ -127,6 +127,20 @@ recordRoutes.post("/update/user", (req, res) => {
     );
 });
 
+
+
+recordRoutes.delete("/deleteQuestion", (req, res) => {
+  
+  dbo.connection
+    .useDb("KFashionDB")
+    .collection("Preguntas")
+    .deleteOne({ _id: ObjectId(req.body.preguntaId) }, function (err, result) {
+      
+      if (err) console.log(err);
+      
+      res.json(result);
+    });
+});
 recordRoutes.post("/register/question", (req, res) => {
   var userid = req.body.usuario;
   var o_id = new ObjectId(userid);
@@ -428,7 +442,7 @@ recordRoutes.post("/add/user", (req, res) => {
      
     let hash = crypto.pbkdf2Sync(req.body.contrasenha, salt,  
     1000, 64, `sha512`).toString(`hex`); 
-    console.log(hash)
+    
   let myobj = {
     nombre: req.body.nombre,
     apellido: req.body.apellido,
