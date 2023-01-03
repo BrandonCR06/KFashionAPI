@@ -3,7 +3,7 @@ const express = require("express");
 // We use it to define our routes.
 // The router will be added as a middleware and will take control of requests starting with path /record.
 const recordRoutes = express.Router();
-var crypto = require('crypto'); 
+var crypto = require("crypto");
 
 // This will help us connect to the database
 const dbo = require("./database");
@@ -15,38 +15,38 @@ const ObjectId = require("mongodb").ObjectId;
 recordRoutes.get("/", (req, res) => {
   res.send("Hello");
 });
-function validPassword(pss, salt, hash){
-  var hashed = crypto.pbkdf2Sync(pss,  
-    salt, 1000, 64, `sha512`).toString(`hex`); 
-    return hash === hashed; 
+function validPassword(pss, salt, hash) {
+  var hashed = crypto.pbkdf2Sync(pss, salt, 1000, 64, `sha512`).toString(`hex`);
+  return hash === hashed;
 }
 recordRoutes.post("/validUser", (req, res) => {
-  console.log(req.body)
+  console.log(req.body);
   dbo.connection
-  .useDb("KFashionDB")
-  .collection("Users").find({ correo : req.body.email }).toArray(function(err, user1) { 
-    let user = user1[0]
-    console.log(user)
-    if (user === null) { 
-        return res.status(400).send({ 
-            message : "Usuario no encontrado.", user: ""
-        }); 
-    } 
-    else { 
-        if (validPassword(req.body.password,user.salt,user.hash)) { 
-            return res.status(200).send({ 
-                message : "Usuario ha iniciado sesión",user:user
-            }) 
-        } 
-        else { 
-            return res.status(400).send({ 
-                message : "Contraseña incorrecta", user:""
-            }); 
-        } 
-    } 
-}); 
-    
-  
+    .useDb("KFashionDB")
+    .collection("Users")
+    .find({ correo: req.body.email })
+    .toArray(function (err, user1) {
+      let user = user1[0];
+      console.log(user);
+      if (user === null) {
+        return res.status(400).send({
+          message: "Usuario no encontrado.",
+          user: "",
+        });
+      } else {
+        if (validPassword(req.body.password, user.salt, user.hash)) {
+          return res.status(200).send({
+            message: "Usuario ha iniciado sesión",
+            user: user,
+          });
+        } else {
+          return res.status(400).send({
+            message: "Contraseña incorrecta",
+            user: "",
+          });
+        }
+      }
+    });
 });
 
 recordRoutes.get("/get/users", (req, res) => {
@@ -127,18 +127,13 @@ recordRoutes.post("/update/user", (req, res) => {
     );
 });
 
-
-
-
 recordRoutes.delete("/deleteQuestion", (req, res) => {
-  
   dbo.connection
     .useDb("KFashionDB")
     .collection("Preguntas")
     .deleteOne({ _id: ObjectId(req.body.preguntaId) }, function (err, result) {
-      
       if (err) console.log(err);
-      
+
       res.json(result);
     });
 });
@@ -437,21 +432,22 @@ recordRoutes.post("/update/order", (req, res) => {
 });
 
 recordRoutes.post("/add/user", (req, res) => {
-  let salt = crypto.randomBytes(16).toString('hex'); 
-  
-    // Hashing user's salt and password with 1000 iterations, 
-     
-    let hash = crypto.pbkdf2Sync(req.body.contrasenha, salt,  
-    1000, 64, `sha512`).toString(`hex`); 
-    
+  let salt = crypto.randomBytes(16).toString("hex");
+
+  // Hashing user's salt and password with 1000 iterations,
+
+  let hash = crypto
+    .pbkdf2Sync(req.body.contrasenha, salt, 1000, 64, `sha512`)
+    .toString(`hex`);
+
   let myobj = {
     nombre: req.body.nombre,
     apellido: req.body.apellido,
     fecha_nacimiento: req.body.fecha_nacimiento,
-    correo: req.body.correo,      
+    correo: req.body.correo,
     cedula: req.body.cedula,
     sexo: req.body.sexo,
-    hash : hash,
+    hash: hash,
     salt: salt,
     rol: req.body.rol,
   };
@@ -544,6 +540,37 @@ recordRoutes.get("/get/categorias", (req, res) => {
     .find({})
     .toArray(function (err, result) {
       if (err) throw err;
+      res.json(result);
+    });
+});
+
+recordRoutes.post("/updateCategoria", (req, res) => {
+  console.log(req.body.id);
+
+  dbo.connection
+    .useDb("KFashionDB")
+    .collection("Categorias")
+    .updateOne(
+      { _id: ObjectId(req.body.id) },
+      {
+        $set: {
+          Categoria: req.body.Categoria,
+        },
+      },
+      function (err, result) {
+        if (err) console.log(err);
+        res.json(result);
+      }
+    );
+});
+
+recordRoutes.delete("/remove/categoria", (req, res) => {
+  console.log(req.body._id);
+  dbo.connection
+    .useDb("KFashionDB")
+    .collection("Categorias")
+    .deleteOne({ _id: ObjectId(req.body._id) }, function (err, result) {
+      if (err) console.log(err);
       res.json(result);
     });
 });
