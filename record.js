@@ -575,4 +575,18 @@ recordRoutes.delete("/remove/categoria", (req, res) => {
     });
 });
 
+recordRoutes.post("/register/categoria", (req, res) => {
+  let myobj = {
+    Categoria: req.body.nombre,
+  };
+
+  dbo.connection
+    .useDb("KFashionDB")
+    .collection("Categorias")
+    .insertOne(myobj, function (err, result) {
+      if (err) console.log(err);
+      res.json(result);
+    });
+});
+
 module.exports = recordRoutes;
