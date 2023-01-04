@@ -6,14 +6,11 @@ const cors = require("cors");
 //require("dotenv").config({ path: "./config.env" });
 const port = process.env.PORT || 4001;
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: "10mb" }));
 app.use(require("./record"));
 // get driver connection
 const dbo = require("./database");
 
 app.listen(port, () => {
   // perform a database connection when server starts
-
-  
 });
-
