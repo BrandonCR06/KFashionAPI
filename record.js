@@ -487,7 +487,6 @@ recordRoutes.post("/register/promotion", (req, res) => {
     fechaInicio: req.body.fechaInicio,
     fechaFinal: req.body.fechaFinal,
     producto: ObjectId(req.body.producto),
-    porcentaje: req.body.porcentaje,
   };
 
   dbo.connection
@@ -505,7 +504,7 @@ recordRoutes.post("/register/promotion", (req, res) => {
       { _id: ObjectId(req.body.producto) },
       {
         $set: {
-          descuento: req.body.producto,
+          descuento: req.body.porcentaje,
         },
       },
       function (err, result) {
