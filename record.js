@@ -523,6 +523,22 @@ recordRoutes.delete("/remove/promotion", (req, res) => {
       if (err) console.log(err);
       res.json(result);
     });
+
+    dbo.connection
+    .useDb("KFashionDB")
+    .collection("Products")
+    .updateOne(
+      { _id: ObjectId(req.body._id) },
+      {
+        $set: {
+          descuento: 0
+        },
+      },
+      function (err, result) {
+        if (err) console.log(err);
+        res.json(result);
+      }
+    );
 });
 
 recordRoutes.post("/updatePromo", (req, res) => {
