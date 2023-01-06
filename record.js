@@ -523,7 +523,7 @@ recordRoutes.delete("/remove/promotion", (req, res) => {
       if (err) console.log(err);
       res.json(result);
     });
-
+    /*
     dbo.connection
     .useDb("KFashionDB")
     .collection("Products")
@@ -539,6 +539,7 @@ recordRoutes.delete("/remove/promotion", (req, res) => {
         res.json(result);
       }
     );
+    */
 });
 
 recordRoutes.post("/updatePromo", (req, res) => {
