@@ -413,12 +413,12 @@ recordRoutes.delete("/remove/product", (req, res) => {
 });
 
 recordRoutes.post("/update/order", (req, res) => {
-  console.log(req.body.numFactura, req.body.estado);
+  
   dbo.connection
     .useDb("KFashionDB")
     .collection("Orders")
     .updateOne(
-      { numFactura: req.body.numFactura },
+      { _id:ObjectId( req.body.id) },
       {
         $set: {
           estado: req.body.estado,
