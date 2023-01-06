@@ -546,6 +546,22 @@ recordRoutes.post("/updatePromo", (req, res) => {
         res.json(result);
       }
     );
+
+  dbo.connection
+    .useDb("KFashionDB")
+    .collection("Products")
+    .updateOne(
+      { _id: ObjectId(req.body.producto) },
+      {
+        $set: {
+          descuento: req.body.porcentaje,
+        },
+      },
+      function (err, result) {
+        if (err) console.log(err);
+        res.json(result);
+      }
+    );
 });
 
 recordRoutes.get("/get/categorias", (req, res) => {
