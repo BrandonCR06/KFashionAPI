@@ -677,7 +677,7 @@ recordRoutes.post("/updateDireccion", (req, res) => {
     );
 });
 
-recordRoutes.get("/get/categorias", (req, res) => {
+recordRoutes.get("/get/direcciones", (req, res) => {
   dbo.connection
     .useDb("KFashionDB")
     .collection("Direcciones")
