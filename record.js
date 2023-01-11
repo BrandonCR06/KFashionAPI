@@ -677,4 +677,15 @@ recordRoutes.post("/updateDireccion", (req, res) => {
     );
 });
 
+recordRoutes.get("/get/categorias", (req, res) => {
+  dbo.connection
+    .useDb("KFashionDB")
+    .collection("Direcciones")
+    .find({})
+    .toArray(function (err, result) {
+      if (err) throw err;
+      res.json(result);
+    });
+});
+
 module.exports = recordRoutes;
