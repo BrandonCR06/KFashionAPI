@@ -413,12 +413,11 @@ recordRoutes.delete("/remove/product", (req, res) => {
 });
 
 recordRoutes.post("/update/order", (req, res) => {
-  
   dbo.connection
     .useDb("KFashionDB")
     .collection("Orders")
     .updateOne(
-      { _id:ObjectId( req.body.id) },
+      { _id: ObjectId(req.body.id) },
       {
         $set: {
           estado: req.body.estado,
@@ -523,7 +522,7 @@ recordRoutes.delete("/remove/promotion", (req, res) => {
       if (err) console.log(err);
       res.json(result);
     });
-    /*
+  /*
     dbo.connection
     .useDb("KFashionDB")
     .collection("Products")
@@ -635,6 +634,47 @@ recordRoutes.post("/register/categoria", (req, res) => {
       if (err) console.log(err);
       res.json(result);
     });
+});
+
+recordRoutes.post("/register/direccion", (req, res) => {
+  let myobj = {
+    provincia: req.body.provincia,
+    canton: req.body.canton,
+    distrito: req.body.distrito,
+    direccion: req.body.direccion,
+    usuario: ObjectId(req.body.usuario),
+  };
+
+  dbo.connection
+    .useDb("KFashionDB")
+    .collection("Direcciones")
+    .insertOne(myobj, function (err, result) {
+      if (err) console.log(err);
+      res.json(result);
+    });
+});
+
+recordRoutes.post("/updateDireccion", (req, res) => {
+  console.log(req.body.id);
+
+  dbo.connection
+    .useDb("KFashionDB")
+    .collection("Direcciones")
+    .updateOne(
+      { _id: ObjectId(req.body.id) },
+      {
+        $set: {
+          provincia: req.body.provincia,
+          canton: req.body.canton,
+          distrito: req.body.distrito,
+          direccion: req.body.direccion,
+        },
+      },
+      function (err, result) {
+        if (err) console.log(err);
+        res.json(result);
+      }
+    );
 });
 
 module.exports = recordRoutes;
