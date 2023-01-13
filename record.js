@@ -60,6 +60,28 @@ recordRoutes.get("/get/users", (req, res) => {
     });
 });
 
+recordRoutes.get("/simpleOrders", (req, res) => {
+  dbo.connection
+    .useDb("KFashionDB")
+    .collection("Orders")
+    .find({})
+    .toArray(function (err, result) {
+      if (err) throw err;
+      res.json(result);
+    });
+});
+
+recordRoutes.get("/getProductsNoImage", (req, res) => {
+  dbo.connection
+    .useDb("KFashionDB")
+    .collection("Products")
+    .find().project({imgSrc:0})
+    .toArray(function (err, result) {
+      if (err) throw err;
+      res.json(result);
+    });
+});
+
 // This section will help you get a list of all the products.
 recordRoutes.get("/products", (req, res) => {
   dbo.connection
