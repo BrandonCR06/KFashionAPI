@@ -642,9 +642,9 @@ recordRoutes.post("/register/direccion", (req, res) => {
     canton: req.body.canton,
     distrito: req.body.distrito,
     direccion: req.body.direccion,
-    usuario: ObjectId(req.body.usuario),
+    usuario: req.body.usuario,
   };
-
+  console.log(myobj.usuario);
   dbo.connection
     .useDb("KFashionDB")
     .collection("Direcciones")
@@ -678,11 +678,10 @@ recordRoutes.post("/updateDireccion", (req, res) => {
 });
 
 recordRoutes.get("/get/direcciones", (req, res) => {
-  let usuario = ObjectId(req.body.usuario);
   dbo.connection
     .useDb("KFashionDB")
     .collection("Direcciones")
-    .find({ _id: usuario })
+    .find({})
     .toArray(function (err, result) {
       if (err) throw err;
       res.json(result);
