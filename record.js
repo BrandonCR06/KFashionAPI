@@ -678,12 +678,24 @@ recordRoutes.post("/updateDireccion", (req, res) => {
 });
 
 recordRoutes.get("/get/direcciones", (req, res) => {
+  let usuario = ObjectId(req.body.usuario);
   dbo.connection
     .useDb("KFashionDB")
     .collection("Direcciones")
-    .find({})
+    .find({ _id: usuario })
     .toArray(function (err, result) {
       if (err) throw err;
+      res.json(result);
+    });
+});
+
+recordRoutes.delete("/remove/direccion", (req, res) => {
+  console.log(req.body._id);
+  dbo.connection
+    .useDb("KFashionDB")
+    .collection("Direcciones")
+    .deleteOne({ _id: ObjectId(req.body._id) }, function (err, result) {
+      if (err) console.log(err);
       res.json(result);
     });
 });
