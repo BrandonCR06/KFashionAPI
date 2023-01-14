@@ -75,7 +75,8 @@ recordRoutes.get("/getProductsNoImage", (req, res) => {
   dbo.connection
     .useDb("KFashionDB")
     .collection("Products")
-    .find().project({imgSrc:0})
+    .find()
+    .project({ imgSrc: 0 })
     .toArray(function (err, result) {
       if (err) throw err;
       res.json(result);
@@ -432,6 +433,14 @@ recordRoutes.delete("/remove/product", (req, res) => {
       if (err) console.log(err);
       res.json(result);
     });
+
+  dbo.connection
+    .useDb("KFashionDB")
+    .collection("Promocion")
+    .deleteOne({ producto: ObjectId(req.body._id) }, function (err, result) {
+      if (err) console.log(err);
+      res.json(result);
+    });
 });
 
 recordRoutes.post("/update/order", (req, res) => {
@@ -544,15 +553,15 @@ recordRoutes.delete("/remove/promotion", (req, res) => {
       if (err) console.log(err);
       res.json(result);
     });
-  /*
-    dbo.connection
+
+  dbo.connection
     .useDb("KFashionDB")
     .collection("Products")
     .updateOne(
       { _id: ObjectId(req.body._id) },
       {
         $set: {
-          descuento: 0
+          descuento: 0,
         },
       },
       function (err, result) {
@@ -560,7 +569,6 @@ recordRoutes.delete("/remove/promotion", (req, res) => {
         res.json(result);
       }
     );
-    */
 });
 
 recordRoutes.post("/updatePromo", (req, res) => {
