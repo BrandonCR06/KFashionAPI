@@ -28,7 +28,7 @@ recordRoutes.post("/validUser", (req, res) => {
     .toArray(function (err, user1) {
       let user = user1[0];
       console.log(user);
-      if (user === null) {
+      if (user === undefined) {
         return res.status(400).send({
           message: "Usuario no encontrado.",
           user: "",
