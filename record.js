@@ -546,6 +546,7 @@ recordRoutes.post("/register/promotion", (req, res) => {
 
 recordRoutes.delete("/remove/promotion", (req, res) => {
   console.log(req.body._id);
+  console.log(req.body.producto);
   dbo.connection
     .useDb("KFashionDB")
     .collection("Promocion")
@@ -558,7 +559,7 @@ recordRoutes.delete("/remove/promotion", (req, res) => {
     .useDb("KFashionDB")
     .collection("Products")
     .updateOne(
-      { _id: ObjectId(req.body._id) },
+      { _id: ObjectId(req.body.producto) },
       {
         $set: {
           descuento: 0,
